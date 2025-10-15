@@ -196,15 +196,15 @@ Examples of foundational tasks (adjust based on your project):
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T074 [P] Documentation updates in docs/
-- [ ] T075 Code cleanup and refactoring
-- [ ] T076 Performance optimization across all stories
-- [ ] T077 [P] Additional unit tests (if requested) in backend/tests/unit/
-- [ ] T078 Security hardening
-- [ ] T079 [P] Frontend component styling and responsive design in frontend/src/assets/css/
-- [ ] T080 [P] Error handling improvements in frontend/src/components/ErrorBoundary.vue
-- [ ] T081 [P] Loading state management in frontend/src/components/LoadingSpinner.vue
-- [ ] T082 Run quickstart.md validation
+- [x] T074 [P] Documentation updates in docs/
+- [x] T075 Code cleanup and refactoring
+- [x] T076 Performance optimization across all stories
+- [x] T077 [P] Additional unit tests (if requested) in backend/tests/unit/
+- [x] T078 Security hardening
+- [x] T079 [P] Frontend component styling and responsive design in frontend/src/assets/css/
+- [x] T080 [P] Error handling improvements in frontend/src/components/ErrorBoundary.vue
+- [x] T081 [P] Loading state management in frontend/src/components/LoadingSpinner.vue
+- [x] T082 Run quickstart.md validation
 
 ---
 
