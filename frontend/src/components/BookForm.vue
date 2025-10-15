@@ -181,6 +181,36 @@
         </div>
       </div>
 
+      <!-- Authorship Transfer Section (only show when editing existing book) -->
+      <div v-if="isEdit && currentBook" class="border-t border-gray-200 pt-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Authorship Transfer</h3>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3 flex-1">
+              <p class="text-sm text-amber-800">
+                <strong>Transfer Authorship:</strong> Change the primary author of this book to another author.
+                This action cannot be undone and will update all book records.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4 flex space-x-3">
+            <button
+              @click="handleTransferAuthorship"
+              class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+            >
+              Transfer Authorship
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Error Display -->
       <div v-if="errors.submit" class="bg-red-50 border border-red-200 rounded-md p-4">
         <div class="flex">
@@ -231,12 +261,14 @@ interface Props {
   isEdit?: boolean;
   availableAuthors?: Author[];
   onCoAuthorUpdate?: (bookId: string, coAuthorId: string | null) => Promise<void>;
+  onAuthorshipTransfer?: (bookId: string, newPrimaryAuthorId: string) => Promise<void>;
 }
 
 interface Emits {
   (e: 'submit', data: CreateBookInput | UpdateBookInput): void;
   (e: 'cancel'): void;
   (e: 'co-author-updated', book: Book): void;
+  (e: 'authorship-transferred', book: Book): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -244,6 +276,7 @@ const props = withDefaults(defineProps<Props>(), {
   isEdit: false,
   availableAuthors: () => [],
   onCoAuthorUpdate: undefined,
+  onAuthorshipTransfer: undefined,
 });
 
 const emit = defineEmits<Emits>();
@@ -391,6 +424,16 @@ const handleRemoveCoAuthor = async (): Promise<void> => {
   } catch (error) {
     errors.value.submit = error instanceof Error ? error.message : 'Failed to remove co-author';
   }
+};
+
+const handleTransferAuthorship = async (): Promise<void> => {
+  if (!currentBook.value || !props.onAuthorshipTransfer) {
+    return;
+  }
+
+  // TODO: Implement authorship transfer modal with author selection
+  // For now, show a placeholder
+  alert('Authorship transfer modal will be implemented');
 };
 
 // Reset form

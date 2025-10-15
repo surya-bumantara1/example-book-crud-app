@@ -270,10 +270,12 @@ const handleDelete = async () => {
   }
 };
 
-// Transfer authorship (placeholder for future implementation)
-const handleTransferAuthorship = () => {
-  // TODO: Implement authorship transfer UI
-  alert('Authorship transfer feature will be available after implementing User Story 4');
+// Transfer authorship
+const handleTransferAuthorship = async () => {
+  if (!currentBook.value) return;
+
+  // TODO: Implement authorship transfer modal with author selection
+  alert('Authorship transfer modal will be implemented');
 };
 
 // Add co-author (placeholder for future implementation)

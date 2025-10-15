@@ -157,11 +157,11 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 4
 
-- [ ] T056 [US4] Add authorship transfer method to Book service in backend/src/services/bookService.ts (depends on T048)
-- [ ] T057 [US4] Implement PUT /books/{id}/transfer-authorship endpoint in backend/src/routes/books.ts (depends on T056)
-- [ ] T058 [P] [US4] Add transfer authorship method to book API client in frontend/src/services/bookApi.ts
-- [ ] T059 [P] [US4] Add transfer authorship UI to book management in frontend/src/components/BookForm.vue
-- [ ] T060 [P] [US4] Update author profile to reflect authorship changes in frontend/src/pages/authors/[id].vue
+- [x] T056 [US4] Add authorship transfer method to Book service in backend/src/services/bookService.ts (depends on T048)
+- [x] T057 [US4] Implement PUT /books/{id}/transfer-authorship endpoint in backend/src/routes/books.ts (depends on T056)
+- [x] T058 [P] [US4] Add transfer authorship method to book API client in frontend/src/services/bookApi.ts
+- [x] T059 [P] [US4] Add transfer authorship UI to book management in frontend/src/components/BookForm.vue
+- [x] T060 [P] [US4] Update author profile to reflect authorship changes in frontend/src/pages/authors/[id].vue
 
 ---
 
