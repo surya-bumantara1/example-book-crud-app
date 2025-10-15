@@ -1,0 +1,41 @@
+{
+  "name": "book-author-management-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for book and author management system",
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "test": "vitest",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "format": "prettier --write .",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "nuxt": "^3.8.0",
+    "vue": "^3.3.0",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "@nuxtjs/google-fonts": "^3.0.0",
+    "@nuxtjs/i18n": "^8.0.0",
+    "@nuxtjs/robots": "^3.0.0",
+    "@nuxtjs/sitemap": "^4.0.0"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^3.8.0",
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "eslint-plugin-vue": "^9.17.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.2.0",
+    "vitest": "^0.34.0",
+    "vue-tsc": "^1.8.0"
+  }
+}

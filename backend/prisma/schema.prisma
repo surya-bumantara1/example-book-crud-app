@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Author {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(100)
+  bio       String?  @db.Text
+  email     String?  @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  // Relationships
+  primaryBooks Book[] @relation("PrimaryAuthorship")
+  coAuthored   Book[] @relation("CoAuthorship")
+
+  @@map("authors")
+}
+
+model Book {
+  id             String   @id @default(cuid())
+  title          String   @db.VarChar(200)
+  description    String?  @db.Text
+  isbn           String?  @unique @db.VarChar(17)
+  publishedDate  DateTime?
+  primaryAuthorId String
+  coAuthorId     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  // Relationships
+  primaryAuthor Author @relation("PrimaryAuthorship", fields: [primaryAuthorId], references: [id])
+  coAuthor      Author? @relation("CoAuthorship", fields: [coAuthorId], references: [id])
+
+  @@map("books")
+}
