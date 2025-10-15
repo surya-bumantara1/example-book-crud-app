@@ -178,17 +178,17 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 5
 
-- [ ] T063 [P] [US5] Add search methods to Author service in backend/src/services/authorService.ts
-- [ ] T064 [P] [US5] Add search methods to Book service in backend/src/services/bookService.ts
-- [ ] T065 [US5] Add search query parameters to GET /authors endpoint in backend/src/routes/authors.ts (depends on T063)
-- [ ] T066 [US5] Add search query parameters to GET /books endpoint in backend/src/routes/books.ts (depends on T064)
-- [ ] T067 [P] [US5] Update author API client with search in frontend/src/services/authorApi.ts
-- [ ] T068 [P] [US5] Update book API client with search in frontend/src/services/bookApi.ts
-- [ ] T069 [P] [US5] Create search composable in frontend/src/composables/useSearch.ts
-- [ ] T070 [P] [US5] Create search page in frontend/src/pages/search/index.vue
-- [ ] T071 [P] [US5] Add search component to header/navigation in frontend/src/components/SearchBar.vue
-- [ ] T072 [P] [US5] Update author list page with search functionality in frontend/src/pages/authors/index.vue
-- [ ] T073 [P] [US5] Update book list page with search functionality in frontend/src/pages/books/index.vue
+- [x] T063 [P] [US5] Add search methods to Author service in backend/src/services/authorService.ts
+- [x] T064 [P] [US5] Add search methods to Book service in backend/src/services/bookService.ts
+- [x] T065 [US5] Add search query parameters to GET /authors endpoint in backend/src/routes/authors.ts (depends on T063)
+- [x] T066 [US5] Add search query parameters to GET /books endpoint in backend/src/routes/books.ts (depends on T064)
+- [x] T067 [P] [US5] Update author API client with search in frontend/src/services/authorApi.ts
+- [x] T068 [P] [US5] Update book API client with search in frontend/src/services/bookApi.ts
+- [x] T069 [P] [US5] Create search composable in frontend/src/composables/useSearch.ts
+- [x] T070 [P] [US5] Create search page in frontend/src/pages/search/index.vue
+- [x] T071 [P] [US5] Add search component to header/navigation in frontend/src/components/SearchBar.vue
+- [x] T072 [P] [US5] Update author list page with search functionality in frontend/src/pages/authors/index.vue
+- [x] T073 [P] [US5] Update book list page with search functionality in frontend/src/pages/books/index.vue
 
 ---
 
