@@ -1,0 +1,726 @@
+openapi: 3.0.3
+info:
+  title: Book and Author Management API
+  description: REST API for managing books and authors with CRUD operations and authorship relationships
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+
+components:
+  schemas:
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the author
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+          description: Full name of the author
+        bio:
+          type: string
+          maxLength: 2000
+          description: Biography or description of the author
+        email:
+          type: string
+          format: email
+          description: Contact email for the author
+        createdAt:
+          type: string
+          format: date-time
+          description: Record creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last modification timestamp
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the book
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Title of the book
+        description:
+          type: string
+          maxLength: 5000
+          description: Description or summary of the book
+        isbn:
+          type: string
+          description: ISBN number for the book (ISBN-10 or ISBN-13)
+        publishedDate:
+          type: string
+          format: date-time
+          description: Publication date of the book
+        primaryAuthorId:
+          type: string
+          format: uuid
+          description: ID of the primary author
+        coAuthorId:
+          type: string
+          format: uuid
+          description: ID of the co-author (optional)
+        primaryAuthor:
+          $ref: '#/components/schemas/Author'
+        coAuthor:
+          $ref: '#/components/schemas/Author'
+        createdAt:
+          type: string
+          format: date-time
+          description: Record creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last modification timestamp
+      required:
+        - id
+        - title
+        - primaryAuthorId
+        - createdAt
+        - updatedAt
+
+    CreateAuthorRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        bio:
+          type: string
+          maxLength: 2000
+        email:
+          type: string
+          format: email
+      required:
+        - name
+
+    UpdateAuthorRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        bio:
+          type: string
+          maxLength: 2000
+        email:
+          type: string
+          format: email
+
+    CreateBookRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        isbn:
+          type: string
+        publishedDate:
+          type: string
+          format: date-time
+        primaryAuthorId:
+          type: string
+          format: uuid
+        coAuthorId:
+          type: string
+          format: uuid
+      required:
+        - title
+        - primaryAuthorId
+
+    UpdateBookRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        isbn:
+          type: string
+        publishedDate:
+          type: string
+          format: date-time
+        primaryAuthorId:
+          type: string
+          format: uuid
+        coAuthorId:
+          type: string
+          format: uuid
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code for programmatic handling
+        details:
+          type: object
+          description: Additional error details
+      required:
+        - error
+        - code
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+
+  parameters:
+    authorId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Author ID
+
+    bookId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Book ID
+
+    limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Number of items per page
+
+    offset:
+      name: offset
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      description: Number of items to skip
+
+paths:
+  # Author endpoints
+  /authors:
+    get:
+      summary: List authors
+      description: Retrieve a paginated list of authors
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search term for author name
+      responses:
+        '200':
+          description: List of authors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authors:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Author'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Create author
+      description: Create a new author
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAuthorRequest'
+      responses:
+        '201':
+          description: Author created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '409':
+          description: Author with this email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /authors/{id}:
+    parameters:
+      - $ref: '#/components/parameters/authorId'
+
+    get:
+      summary: Get author by ID
+      description: Retrieve a specific author by their ID
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      responses:
+        '200':
+          description: Author details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: Update author
+      description: Update an existing author's information
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAuthorRequest'
+      responses:
+        '200':
+          description: Author updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: Email already in use by another author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Soft delete author
+      description: Soft delete an author (preserves data but makes it inaccessible)
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      responses:
+        '204':
+          description: Author deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: Cannot delete author with existing books
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Book endpoints
+  /books:
+    get:
+      summary: List books
+      description: Retrieve a paginated list of books with optional filtering
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search term for book title
+        - name: authorId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by primary author ID
+      responses:
+        '200':
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  books:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Book'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Create book
+      description: Create a new book with primary author
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookRequest'
+      responses:
+        '201':
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Primary author not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Book with this ISBN already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /books/{id}:
+    parameters:
+      - $ref: '#/components/parameters/bookId'
+
+    get:
+      summary: Get book by ID
+      description: Retrieve a specific book by its ID with full author details
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      responses:
+        '200':
+          description: Book details with author information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: Update book
+      description: Update an existing book's information
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookRequest'
+      responses:
+        '200':
+          description: Book updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: Book with this ISBN already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Soft delete book
+      description: Soft delete a book (preserves data but makes it inaccessible)
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      responses:
+        '204':
+          description: Book deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /books/{id}/co-author:
+    parameters:
+      - $ref: '#/components/parameters/bookId'
+
+    put:
+      summary: Update book co-author
+      description: Add, change, or remove a book's co-author
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coAuthorId:
+                  type: string
+                  format: uuid
+                  description: ID of the co-author (null to remove)
+              required:
+                - coAuthorId
+      responses:
+        '200':
+          description: Book co-author updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: Co-author cannot be the same as primary author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /books/{id}/transfer-authorship:
+    parameters:
+      - $ref: '#/components/parameters/bookId'
+
+    put:
+      summary: Transfer book authorship
+      description: Transfer primary authorship of a book to another author
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPrimaryAuthorId:
+                  type: string
+                  format: uuid
+                  description: ID of the new primary author
+              required:
+                - newPrimaryAuthorId
+      responses:
+        '200':
+          description: Book authorship transferred successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: New author cannot be the current co-author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Authentication endpoints
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticate user and return access tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Access token cookie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    description: User information
+                  accessToken:
+                    type: string
+                    description: JWT access token
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/logout:
+    post:
+      summary: User logout
+      description: Invalidate user session
+      security:
+        - BearerAuth: []
+        - CookieAuth: []
+      responses:
+        '204':
+          description: Logout successful
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+responses:
+  BadRequestError:
+    description: Bad request - invalid input data
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ErrorResponse'
+
+  UnauthorizedError:
+    description: Authentication required or invalid
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ErrorResponse'
+
+  NotFoundError:
+    description: Resource not found
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ErrorResponse'
+
+  InternalServerError:
+    description: Internal server error
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ErrorResponse'
