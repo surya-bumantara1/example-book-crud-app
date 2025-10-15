@@ -101,20 +101,20 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 2
 
-- [ ] T032 [P] [US2] Create Book model in backend/src/models/book.ts
-- [ ] T033 [P] [US2] Create Book service in backend/src/services/bookService.ts
-- [ ] T034 [US2] Implement POST /books endpoint in backend/src/routes/books.ts (depends on T032, T033)
-- [ ] T035 [US2] Implement GET /books endpoint in backend/src/routes/books.ts (depends on T032, T033)
-- [ ] T036 [US2] Implement GET /books/{id} endpoint in backend/src/routes/books.ts (depends on T032, T033)
-- [ ] T037 [US2] Implement PUT /books/{id} endpoint in backend/src/routes/books.ts (depends on T032, T033)
-- [ ] T038 [US2] Implement DELETE /books/{id} endpoint in backend/src/routes/books.ts (depends on T032, T033)
-- [ ] T039 [P] [US2] Create book API client in frontend/src/services/bookApi.ts
-- [ ] T040 [P] [US2] Create book composable in frontend/src/composables/useBooks.ts
-- [ ] T041 [P] [US2] Create book list page in frontend/src/pages/books/index.vue
-- [ ] T042 [P] [US2] Create book form component in frontend/src/components/BookForm.vue
-- [ ] T043 [US2] Create book detail page in frontend/src/pages/books/[id].vue (depends on T041, T042)
-- [ ] T044 [P] [US2] Add book routes to frontend/nuxt.config.ts
-- [ ] T045 [P] [US2] Update author detail page to show books in frontend/src/pages/authors/[id].vue
+- [x] T032 [P] [US2] Create Book model in backend/src/models/book.ts
+- [x] T033 [P] [US2] Create Book service in backend/src/services/bookService.ts
+- [x] T034 [US2] Implement POST /books endpoint in backend/src/routes/books.ts (depends on T032, T033)
+- [x] T035 [US2] Implement GET /books endpoint in backend/src/routes/books.ts (depends on T032, T033)
+- [x] T036 [US2] Implement GET /books/{id} endpoint in backend/src/routes/books.ts (depends on T032, T033)
+- [x] T037 [US2] Implement PUT /books/{id} endpoint in backend/src/routes/books.ts (depends on T032, T033)
+- [x] T038 [US2] Implement DELETE /books/{id} endpoint in backend/src/routes/books.ts (depends on T032, T033)
+- [x] T039 [P] [US2] Create book API client in frontend/src/services/bookApi.ts
+- [x] T040 [P] [US2] Create book composable in frontend/src/composables/useBooks.ts
+- [x] T041 [P] [US2] Create book list page in frontend/src/pages/books/index.vue
+- [x] T042 [P] [US2] Create book form component in frontend/src/components/BookForm.vue
+- [x] T043 [US2] Create book detail page in frontend/src/pages/books/[id].vue (depends on T041, T042)
+- [x] T044 [P] [US2] Add book routes to frontend/nuxt.config.ts
+- [x] T045 [P] [US2] Update author detail page to show books in frontend/src/pages/authors/[id].vue
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 

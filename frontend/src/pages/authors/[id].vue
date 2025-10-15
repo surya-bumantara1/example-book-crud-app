@@ -109,23 +109,85 @@
         </div>
       </div>
 
-      <!-- Books by this author (placeholder for future implementation) -->
+      <!-- Books by this author -->
       <div class="mt-8">
-        <h2 class="text-xl font-bold text-gray-900 mb-4">Books by {{ currentAuthor.name }}</h2>
-        <div class="bg-gray-50 rounded-lg p-8 text-center">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-900">Books by {{ currentAuthor.name }}</h2>
+          <NuxtLink
+            to="/books"
+            class="text-blue-600 hover:text-blue-800 font-medium text-sm"
+          >
+            View All Books →
+          </NuxtLink>
+        </div>
+
+        <!-- Books as Primary Author -->
+        <div v-if="primaryBooks.length > 0" class="mb-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Primary Author</h3>
+          <div class="grid gap-4 md:grid-cols-2">
+            <div
+              v-for="book in primaryBooks"
+              :key="book.id"
+              class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+            >
+              <h4 class="font-medium text-gray-900 mb-2">{{ book.title }}</h4>
+              <p v-if="book.description" class="text-sm text-gray-600 line-clamp-2 mb-3">
+                {{ book.description }}
+              </p>
+              <div class="flex justify-between items-center text-sm text-gray-500">
+                <span>{{ formatDate(book.createdAt) }}</span>
+                <NuxtLink
+                  :to="`/books/${book.id}`"
+                  class="text-blue-600 hover:text-blue-800"
+                >
+                  View →
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Books as Co-Author -->
+        <div v-if="coAuthoredBooks.length > 0" class="mb-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Co-Author</h3>
+          <div class="grid gap-4 md:grid-cols-2">
+            <div
+              v-for="book in coAuthoredBooks"
+              :key="book.id"
+              class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+            >
+              <h4 class="font-medium text-gray-900 mb-2">{{ book.title }}</h4>
+              <p v-if="book.description" class="text-sm text-gray-600 line-clamp-2 mb-3">
+                {{ book.description }}
+              </p>
+              <div class="flex justify-between items-center text-sm text-gray-500">
+                <span>{{ formatDate(book.createdAt) }}</span>
+                <NuxtLink
+                  :to="`/books/${book.id}`"
+                  class="text-blue-600 hover:text-blue-800"
+                >
+                  View →
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div v-if="primaryBooks.length === 0 && coAuthoredBooks.length === 0" class="bg-gray-50 rounded-lg p-8 text-center">
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">Books Coming Soon</h3>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No Books Yet</h3>
           <p class="mt-1 text-sm text-gray-500">
-            Book management features will be available after implementing User Story 2.
+            This author hasn't published any books yet.
           </p>
           <div class="mt-6">
             <NuxtLink
-              to="/books"
+              to="/books/create"
               class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
             >
-              View All Books
+              Add a Book
             </NuxtLink>
           </div>
         </div>
@@ -168,6 +230,10 @@ const {
   deleteAuthor,
   clearError,
 } = useAuthors();
+
+// Additional state for books
+const primaryBooks = ref([]);
+const coAuthoredBooks = ref([]);
 
 // Get author ID from route params
 const authorId = computed(() => route.params.id as string);
