@@ -39,5 +39,10 @@ export default defineNuxtConfig({
   },
   sitemap: {
     hostname: process.env.FRONTEND_URL || 'http://localhost:3000'
+  },
+  nitro: {
+    experimental: {
+      wasm: true
+    }
   }
 })

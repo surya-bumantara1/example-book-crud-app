@@ -69,19 +69,19 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 1
 
-- [ ] T016 [P] [US1] Create Author model in backend/src/models/author.ts
-- [ ] T017 [P] [US1] Create Author service in backend/src/services/authorService.ts
-- [ ] T018 [US1] Implement POST /authors endpoint in backend/src/routes/authors.ts (depends on T016, T017)
-- [ ] T019 [US1] Implement GET /authors endpoint in backend/src/routes/authors.ts (depends on T016, T017)
-- [ ] T020 [US1] Implement GET /authors/{id} endpoint in backend/src/routes/authors.ts (depends on T016, T017)
-- [ ] T021 [US1] Implement PUT /authors/{id} endpoint in backend/src/routes/authors.ts (depends on T016, T017)
-- [ ] T022 [US1] Implement DELETE /authors/{id} endpoint in backend/src/routes/authors.ts (depends on T016, T017)
-- [ ] T023 [P] [US1] Create author API client in frontend/src/services/authorApi.ts
-- [ ] T024 [P] [US1] Create author composable in frontend/src/composables/useAuthors.ts
-- [ ] T025 [P] [US1] Create author list page in frontend/src/pages/authors/index.vue
-- [ ] T026 [P] [US1] Create author form component in frontend/src/components/AuthorForm.vue
-- [ ] T027 [US1] Create author detail page in frontend/src/pages/authors/[id].vue (depends on T025, T026)
-- [ ] T028 [P] [US1] Add author routes to frontend/nuxt.config.ts
+- [x] T016 [P] [US1] Create Author model in backend/src/models/author.ts
+- [x] T017 [P] [US1] Create Author service in backend/src/services/authorService.ts
+- [x] T018 [US1] Implement POST /authors endpoint in backend/src/routes/authors.ts (depends on T016, T017)
+- [x] T019 [US1] Implement GET /authors endpoint in backend/src/routes/authors.ts (depends on T016, T017)
+- [x] T020 [US1] Implement GET /authors/{id} endpoint in backend/src/routes/authors.ts (depends on T016, T017)
+- [x] T021 [US1] Implement PUT /authors/{id} endpoint in backend/src/routes/authors.ts (depends on T016, T017)
+- [x] T022 [US1] Implement DELETE /authors/{id} endpoint in backend/src/routes/authors.ts (depends on T016, T017)
+- [x] T023 [P] [US1] Create author API client in frontend/src/services/authorApi.ts
+- [x] T024 [P] [US1] Create author composable in frontend/src/composables/useAuthors.ts
+- [x] T025 [P] [US1] Create author list page in frontend/src/pages/authors/index.vue
+- [x] T026 [P] [US1] Create author form component in frontend/src/components/AuthorForm.vue
+- [x] T027 [US1] Create author detail page in frontend/src/pages/authors/[id].vue (depends on T025, T026)
+- [x] T028 [P] [US1] Add author routes to frontend/nuxt.config.ts
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
