@@ -113,6 +113,74 @@
         </p>
       </div>
 
+      <!-- Co-Author Management Actions (only show when editing existing book) -->
+      <div v-if="isEdit && currentBook" class="border-t border-gray-200 pt-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Co-Author Management</h3>
+
+        <!-- Current Co-Author Display -->
+        <div v-if="currentBook.coAuthor" class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-green-800">Current Co-Author</p>
+              <p class="text-sm text-green-700">{{ currentBook.coAuthor.name }}</p>
+              <p class="text-xs text-green-600">{{ currentBook.coAuthor.email }}</p>
+            </div>
+            <button
+              @click="handleRemoveCoAuthor"
+              class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+            >
+              Remove Co-Author
+            </button>
+          </div>
+        </div>
+
+        <!-- No Co-Author State -->
+        <div v-else class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-lg text-center">
+          <p class="text-sm text-gray-600 mb-3">No co-author assigned to this book</p>
+          <button
+            @click="showCoAuthorSelector = !showCoAuthorSelector"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+          >
+            Add Co-Author
+          </button>
+        </div>
+
+        <!-- Co-Author Selector (shown when adding/updating) -->
+        <div v-if="showCoAuthorSelector || (!currentBook.coAuthor && isEdit)" class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Select New Co-Author
+            </label>
+            <select
+              v-model="selectedCoAuthorId"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">Choose an author...</option>
+              <option v-for="author in availableAuthors" :key="author.id" :value="author.id">
+                {{ author.name }} {{ author.email ? `(${author.email})` : '' }}
+              </option>
+            </select>
+          </div>
+
+          <div class="flex space-x-3">
+            <button
+              @click="handleUpdateCoAuthor"
+              :disabled="!selectedCoAuthorId || selectedCoAuthorId === form.primaryAuthorId"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ currentBook.coAuthor ? 'Change Co-Author' : 'Add Co-Author' }}
+            </button>
+            <button
+              v-if="showCoAuthorSelector"
+              @click="showCoAuthorSelector = false"
+              class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Error Display -->
       <div v-if="errors.submit" class="bg-red-50 border border-red-200 rounded-md p-4">
         <div class="flex">
@@ -162,17 +230,20 @@ interface Props {
   book?: Book | null;
   isEdit?: boolean;
   availableAuthors?: Author[];
+  onCoAuthorUpdate?: (bookId: string, coAuthorId: string | null) => Promise<void>;
 }
 
 interface Emits {
   (e: 'submit', data: CreateBookInput | UpdateBookInput): void;
   (e: 'cancel'): void;
+  (e: 'co-author-updated', book: Book): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   book: null,
   isEdit: false,
   availableAuthors: () => [],
+  onCoAuthorUpdate: undefined,
 });
 
 const emit = defineEmits<Emits>();
@@ -190,8 +261,13 @@ const form = ref<CreateBookInput>({
 const isSubmitting = ref(false);
 const errors = ref<Record<string, string>>({});
 
+// Co-author management state
+const showCoAuthorSelector = ref(false);
+const selectedCoAuthorId = ref('');
+
 // Computed properties
 const isEdit = computed(() => props.isEdit);
+const currentBook = computed(() => props.book);
 
 // Initialize form with book data if editing
 onMounted(() => {
@@ -281,6 +357,42 @@ const handleSubmit = async (): Promise<void> => {
   }
 };
 
+// Co-author management methods
+const handleUpdateCoAuthor = async (): Promise<void> => {
+  if (!selectedCoAuthorId.value || !currentBook.value) {
+    return;
+  }
+
+  if (selectedCoAuthorId.value === form.value.primaryAuthorId) {
+    errors.value.coAuthorId = 'Co-author cannot be the same as primary author';
+    return;
+  }
+
+  try {
+    if (props.onCoAuthorUpdate) {
+      await props.onCoAuthorUpdate(currentBook.value.id, selectedCoAuthorId.value);
+      showCoAuthorSelector.value = false;
+      selectedCoAuthorId.value = '';
+      // The parent component should emit the updated book
+    }
+  } catch (error) {
+    errors.value.submit = error instanceof Error ? error.message : 'Failed to update co-author';
+  }
+};
+
+const handleRemoveCoAuthor = async (): Promise<void> => {
+  if (!currentBook.value || !props.onCoAuthorUpdate) {
+    return;
+  }
+
+  try {
+    await props.onCoAuthorUpdate(currentBook.value.id, null);
+    // The parent component should emit the updated book
+  } catch (error) {
+    errors.value.submit = error instanceof Error ? error.message : 'Failed to remove co-author';
+  }
+};
+
 // Reset form
 const resetForm = (): void => {
   form.value = {
@@ -292,6 +404,8 @@ const resetForm = (): void => {
     coAuthorId: '',
   };
   errors.value = {};
+  showCoAuthorSelector.value = false;
+  selectedCoAuthorId.value = '';
 };
 
 defineExpose({

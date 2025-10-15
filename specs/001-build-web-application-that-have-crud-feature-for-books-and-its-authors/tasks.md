@@ -133,12 +133,12 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 3
 
-- [ ] T048 [US3] Update Book service to handle co-author relationships in backend/src/services/bookService.ts (depends on T033)
-- [ ] T049 [US3] Implement PUT /books/{id}/co-author endpoint in backend/src/routes/books.ts (depends on T048)
-- [ ] T050 [P] [US3] Update book API client to handle co-authors in frontend/src/services/bookApi.ts
-- [ ] T051 [P] [US3] Update book composable for co-author management in frontend/src/composables/useBooks.ts
-- [ ] T052 [P] [US3] Update book form component to include co-author selection in frontend/src/components/BookForm.vue
-- [ ] T053 [P] [US3] Update book detail page to show co-author information in frontend/src/pages/books/[id].vue
+- [x] T048 [US3] Update Book service to handle co-author relationships in backend/src/services/bookService.ts (depends on T033)
+- [x] T049 [US3] Implement PUT /books/{id}/co-author endpoint in backend/src/routes/books.ts (depends on T048)
+- [x] T050 [P] [US3] Update book API client to handle co-authors in frontend/src/services/bookApi.ts
+- [x] T051 [P] [US3] Update book composable for co-author management in frontend/src/composables/useBooks.ts
+- [x] T052 [P] [US3] Update book form component to include co-author selection in frontend/src/components/BookForm.vue
+- [x] T053 [P] [US3] Update book detail page to show co-author information in frontend/src/pages/books/[id].vue
 
 **Checkpoint**: All user stories should now be independently functional
 

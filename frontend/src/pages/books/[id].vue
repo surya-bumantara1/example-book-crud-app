@@ -96,26 +96,61 @@
           <div class="mb-6">
             <h2 class="text-lg font-semibold text-gray-900 mb-3">Authors</h2>
             <div class="space-y-3">
-              <div class="flex items-center">
-                <span class="text-gray-600 mr-2">Primary Author:</span>
-                <NuxtLink
-                  :to="`/authors/${currentBook.primaryAuthor?.id}`"
-                  class="text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  {{ currentBook.primaryAuthor?.name }}
-                </NuxtLink>
+              <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div>
+                  <span class="text-sm font-medium text-blue-800">Primary Author:</span>
+                  <NuxtLink
+                    :to="`/authors/${currentBook.primaryAuthor?.id}`"
+                    class="block text-blue-600 hover:text-blue-800 font-medium mt-1"
+                  >
+                    {{ currentBook.primaryAuthor?.name }}
+                  </NuxtLink>
+                  <p v-if="currentBook.primaryAuthor?.email" class="text-xs text-blue-600 mt-1">
+                    {{ currentBook.primaryAuthor.email }}
+                  </p>
+                </div>
+                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  Primary
+                </span>
               </div>
-              <div v-if="currentBook.coAuthor" class="flex items-center">
-                <span class="text-gray-600 mr-2">Co-Author:</span>
-                <NuxtLink
-                  :to="`/authors/${currentBook.coAuthor.id}`"
-                  class="text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  {{ currentBook.coAuthor.name }}
-                </NuxtLink>
+
+              <div v-if="currentBook.coAuthor" class="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                <div>
+                  <span class="text-sm font-medium text-green-800">Co-Author:</span>
+                  <NuxtLink
+                    :to="`/authors/${currentBook.coAuthor.id}`"
+                    class="block text-green-600 hover:text-green-800 font-medium mt-1"
+                  >
+                    {{ currentBook.coAuthor.name }}
+                  </NuxtLink>
+                  <p v-if="currentBook.coAuthor.email" class="text-xs text-green-600 mt-1">
+                    {{ currentBook.coAuthor.email }}
+                  </p>
+                </div>
+                <div class="flex space-x-2">
+                  <button
+                    @click="handleChangeCoAuthor"
+                    class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded hover:bg-yellow-200"
+                  >
+                    Change
+                  </button>
+                  <button
+                    @click="handleRemoveCoAuthor"
+                    class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded hover:bg-red-200"
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
-              <div v-else class="text-gray-500 italic">
-                No co-author assigned
+
+              <div v-else class="p-3 bg-gray-50 border border-gray-200 rounded-lg text-center">
+                <p class="text-sm text-gray-600 mb-3">No co-author assigned to this book</p>
+                <button
+                  @click="handleAddCoAuthor"
+                  class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+                >
+                  Add Co-Author
+                </button>
               </div>
             </div>
           </div>
@@ -211,6 +246,9 @@ const {
   clearError,
 } = useBooks();
 
+// Import authors composable for co-author selection
+const { authors: availableAuthors } = useAuthors();
+
 // Get book ID from route params
 const bookId = computed(() => route.params.id as string);
 
@@ -244,10 +282,26 @@ const handleAddCoAuthor = () => {
   alert('Co-author management will be available after implementing User Story 3');
 };
 
-// Update co-author (placeholder for future implementation)
-const handleUpdateCoAuthor = () => {
-  // TODO: Implement co-author update UI
-  alert('Co-author management will be available after implementing User Story 3');
+// Co-author management methods
+const handleChangeCoAuthor = async () => {
+  // TODO: Implement co-author change modal
+  alert('Co-author change modal will be implemented');
+};
+
+const handleRemoveCoAuthor = async () => {
+  if (!currentBook.value) return;
+
+  if (confirm('Are you sure you want to remove the co-author from this book?')) {
+    try {
+      const updatedBook = await updateCoAuthor(currentBook.value.id, null);
+      if (updatedBook) {
+        // Book updated successfully
+        await loadBook(currentBook.value.id);
+      }
+    } catch (error) {
+      console.error('Error removing co-author:', error);
+    }
+  }
 };
 
 // Format date for display
